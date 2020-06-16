@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200611121336_IdentityAdded.cs" />
+    <Compile Remove="Migrations\20200611121336_IdentityAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200615095507_ApplicationUserUpdateAdded.cs" />
+    <Compile Remove="Migrations\20200615095507_ApplicationUserUpdateAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200615100111_ApplicationUserUpdate.cs" />
+    <Compile Remove="Migrations\20200615100111_ApplicationUserUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200615100738_ApplicationUserUpdate.cs" />
+    <Compile Remove="Migrations\20200615100738_ApplicationUserUpdate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

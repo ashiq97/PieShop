@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PieShop.Auth;
 using PieShop.Models;
 
 namespace PieShop
@@ -28,7 +29,16 @@ namespace PieShop
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
+            //services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            //{
+            //    options.Password.RequiredLength = 8;
+            //    options.Password.RequireNonAlphanumeric = true;
+            //    options.Password.RequireUppercase = true;
+            //    options.User.RequireUniqueEmail = true;
+            //})
+            // .AddEntityFrameworkStores<AppDbContext>();
+
+            services.AddDefaultIdentity<ApplicationUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             services.AddScoped<IPieRepository, PieRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -51,7 +61,9 @@ namespace PieShop
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
+            
             app.UseRouting();
+            
             app.UseAuthentication();
             app.UseAuthorization();
 

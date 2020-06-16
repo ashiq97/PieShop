@@ -1,5 +1,16 @@
-﻿<!DOCTYPE html>
+﻿
+@using System.Security.Claims
+@using System.Threading.Tasks
+@using PieShop.Auth
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IAuthorizationService AuthorizationService
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -29,22 +40,26 @@
                         @await Component.InvokeAsync("CategoryMenu")
                         <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
                         @await Component.InvokeAsync("ShoppingCartSummary")
-                        <partial name="_LoginPartial" />
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
+                        {
+                            @await Component.InvokeAsync("AdminMenu")
+                        }
                     </ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="lead">
+                        <img class="img-responsive" alt="Bethany's Pie Shop'" src="~/Images/bethanylogo.png" />
+                    </p>
+                </div>
+                <div class="col-md-9">
+                    @RenderBody()
                 </div>
             </div>
-        </nav>
-        <div class="row">
-            <div class="col-md-3">
-                <p class="lead">
-                    <img class="img-responsive" alt="Bethany's Pie Shop'" src="~/Images/bethanylogo.png" />
-                </p>
-            </div>
-            <div class="col-md-9">
-                @RenderBody()
-            </div>
         </div>
-    </div>
-    @RenderSection("Scripts", required: false);
-</body>
+        @RenderSection("Scripts", required: false);
+    </body>
 </html>
