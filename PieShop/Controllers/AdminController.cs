@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -77,7 +78,18 @@ namespace PieShop.Controllers
             if (user == null)
                 return RedirectToAction("UserManagement", _userManager.Users);
 
-            var vm = new EditUserViewModel() { Id = user.Id, Email = user.Email, UserName = user.UserName, Birthdate = user.Birthdate, City = user.City, Country = user.Country };
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var vm = new EditUserViewModel()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                Birthdate = user.Birthdate,
+                City = user.City,
+                Country = user.Country,
+                UserClaims = claims.Select(c => c.Value).ToList()
+            };
 
             return View(vm);
         }
@@ -110,11 +122,11 @@ namespace PieShop.Controllers
         public async Task<IActionResult> DeleteUser(string id)
         {
             var role = await _userManager.FindByIdAsync(id);
-            if(role!= null)
+            if (role != null)
             {
                 var result = await _userManager.DeleteAsync(role);
-                
-                if(result.Succeeded)
+
+                if (result.Succeeded)
                     return RedirectToAction("UserManagement", _userManager.Users);
                 ModelState.AddModelError("", "smothing went wrong while deleting this user");
             }
@@ -242,7 +254,7 @@ namespace PieShop.Controllers
 
             foreach (var user in _userManager.Users)
             {
-                if(!await _userManager.IsInRoleAsync(user, role.Name))
+                if (!await _userManager.IsInRoleAsync(user, role.Name))
                 {
                     addUserToRoleViewModel.Users.Add(user);
                 }
@@ -313,5 +325,54 @@ namespace PieShop.Controllers
             return View(userRoleViewModel);
         }
 
+
+        ////////////// Claims Management ////////////////////////////////
+
+
+        public async Task<IActionResult> ManageClaimsForUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return RedirectToAction("UserManagement", _userManager.Users);
+
+            var claimsManagementViewModel = new ClaimsManagementViewModel
+            {
+                UserId = user.Id,
+                AllClaimsList = PieShopClaimTypes.ClaimsList
+            };
+
+            return View(claimsManagementViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageClaimsForUser(ClaimsManagementViewModel claimsManagementViewModel)
+        {
+            var user = await _userManager.FindByIdAsync(claimsManagementViewModel.UserId);
+
+            if (user == null)
+                return RedirectToAction("UserManagement", _userManager.Users);
+
+            var claims = await _userManager.GetClaimsAsync(user);
+
+
+            IdentityUserClaim<string> claim =
+                new IdentityUserClaim<string> { ClaimType = claimsManagementViewModel.ClaimId, ClaimValue = claimsManagementViewModel.ClaimId };
+
+            var result = await _userManager.AddClaimAsync(user,claim.ToClaim());
+
+            //user.Claim .Add(claim);
+            //var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+                return RedirectToAction("UserManagement", _userManager.Users);
+
+            ModelState.AddModelError("", "User not updated, something went wrong.");
+
+            return View(claimsManagementViewModel);
+
+
+        }
     }
+
 }
