@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20200615100111_ApplicationUserUpdate.Designer.cs" />
     <Compile Remove="Migrations\20200615100738_ApplicationUserUpdate.cs" />
     <Compile Remove="Migrations\20200615100738_ApplicationUserUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200618112142_listOfReview.cs" />
+    <Compile Remove="Migrations\20200618112142_listOfReview.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

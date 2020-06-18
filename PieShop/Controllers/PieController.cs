@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PieShop.Models;
@@ -14,11 +15,15 @@ namespace PieShop.Controllers
     {
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IPieReviewRepository _pieReviewRepository;
+        private readonly HtmlEncoder _htmlEncoder;
 
-        public PieController(IPieRepository pieRepository, ICategoryRepository categoryRepository)
+        public PieController(IPieRepository pieRepository, ICategoryRepository categoryRepository,IPieReviewRepository pieReviewRepository,HtmlEncoder htmlEncoder)
         {
             _pieRepository = pieRepository;
             _categoryRepository = categoryRepository;
+            _pieReviewRepository = pieReviewRepository;
+            _htmlEncoder = htmlEncoder;
         }
 
         //public ViewResult List()
@@ -29,12 +34,31 @@ namespace PieShop.Controllers
         //    return View(piesListViewModel);
         //}
 
+        [Route("[controller]/Details/{id}")]
         public IActionResult Details(int id)
         {
             var pie = _pieRepository.GetPieById(id);
             if (pie == null)
                 return NotFound();
-            return View(pie);
+
+            return View(new PieDetailViewModel() 
+            { Pie = pie ,PieReview = _pieReviewRepository.GetReviewsForPie(id)});
+        }
+
+        [Route("[controller]/Details/{id}")]
+        [HttpPost]
+        public IActionResult Details(int id, string review)
+        {
+            var pie = _pieRepository.GetPieById(id);
+            if (pie == null)
+                return NotFound();
+
+            //_pieReviewRepository.AddPieReview(new PieReview() { Pie = pie, Review = review });
+
+            string encodedReview = _htmlEncoder.Encode(review);
+            _pieReviewRepository.AddPieReview(new PieReview() { Pie = pie, Review = encodedReview });
+
+            return View(new PieDetailViewModel() { Pie = pie });
         }
 
         public ViewResult List(string category)
