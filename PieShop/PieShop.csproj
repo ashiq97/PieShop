@@ -15,9 +15,12 @@
     <Compile Remove="Migrations\20200615100738_ApplicationUserUpdate.Designer.cs" />
     <Compile Remove="Migrations\20200618112142_listOfReview.cs" />
     <Compile Remove="Migrations\20200618112142_listOfReview.Designer.cs" />
+    <Compile Remove="Migrations\20200620122036_as.cs" />
+    <Compile Remove="Migrations\20200620122036_as.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="jQuery.Validation" Version="1.19.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
@@ -26,7 +29,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0-preview1.19506.1" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="3.2.11" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0-preview1-19509-03" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Promo\Views\Home\Index.cshtml" />
+    <None Include="Areas\Promo\Views\_ViewImports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Promo\Models\" />
   </ItemGroup>
 
 </Project>

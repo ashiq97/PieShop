@@ -9,7 +9,7 @@
         @foreach (var menuItem in Model)        
         {
             <li>
-                <a asp-controller="Admin" asp-action="@menuItem.ActionValue">@menuItem.DisplayValue</a>
+                <a asp-controller="Admin" asp-action="@menuItem.ActionValue" asp-area="">@menuItem.DisplayValue</a>
             </li>
         }
     </ul>

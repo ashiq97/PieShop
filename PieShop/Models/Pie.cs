@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace PieShop.Models
     public class Pie
     {
         public int PieId { get; set; }
+
+        [Remote("CheckIfPieNameAlreadyExists", "PieManagement", ErrorMessage = "That name already exists")]
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string LongDescription { get; set; }
