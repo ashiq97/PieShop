@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PieShop.Models;
 using PieShop.ViewModels;
@@ -53,11 +54,26 @@ namespace PieShop.Controllers
         public IActionResult AddPie(PieEditViewModel pieEditViewModel)
         {
             //Basic validation
+            //if (ModelState.IsValid)
+            //{
+            //    _pieRepository.CreatePie(pieEditViewModel.Pie);
+            //    return RedirectToAction("Index");
+            //}
+
+            //custom validation rules
+            if (ModelState.GetValidationState("Pie.Price") == ModelValidationState.Valid
+                || pieEditViewModel.Pie.Price < 0)
+                ModelState.AddModelError(nameof(pieEditViewModel.Pie.Price), "The price of the pie should be higher than 0");
+
+            if (pieEditViewModel.Pie.IsPieOfTheWeek && !pieEditViewModel.Pie.InStock)
+                ModelState.AddModelError(nameof(pieEditViewModel.Pie.IsPieOfTheWeek), "Only pies that are in stock should be Pie of the Week");
+
             if (ModelState.IsValid)
             {
                 _pieRepository.CreatePie(pieEditViewModel.Pie);
                 return RedirectToAction("Index");
             }
+
             return View(pieEditViewModel);
         }
 
