@@ -68,6 +68,11 @@ namespace PieShop
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
+            }
+            else
+            {
+                app.UseExceptionHandler("/AppException");
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
